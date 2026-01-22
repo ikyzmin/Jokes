@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Jokes</string>
+    <string name="new_joke_button">"Новая Хохма"</string>
+    <string name="joke_placeholder">"Здесь будет хохма"</string>
+    <string name="history_button_text">"Какие хохмы уже были"</string>
+</resources>
