@@ -1,10 +1,11 @@
-package ru.ikyzmin.jokes
+package ru.ikyzmin.jokes.data.network
 
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonIgnoreUnknownKeys
-
+import ru.ikyzmin.jokes.data.network.JokeCategory
+import ru.ikyzmin.jokes.domain.models.JokeType
 
 @OptIn(ExperimentalSerializationApi::class)
 @JsonIgnoreUnknownKeys

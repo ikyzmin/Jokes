@@ -1,4 +1,4 @@
-package ru.ikyzmin.jokes
+package ru.ikyzmin.jokes.data.db
 
 import androidx.room.Database
 import androidx.room.RoomDatabase

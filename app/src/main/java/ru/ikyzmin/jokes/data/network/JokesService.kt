@@ -1,8 +1,7 @@
-package ru.ikyzmin.jokes
+package ru.ikyzmin.jokes.data.network
 
 import retrofit2.Call
 import retrofit2.http.GET
-import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface JokesService {

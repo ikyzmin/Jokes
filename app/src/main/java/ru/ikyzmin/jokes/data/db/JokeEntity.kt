@@ -1,9 +1,8 @@
-package ru.ikyzmin.jokes
+package ru.ikyzmin.jokes.data.db
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.time.LocalDate
 import java.time.LocalDateTime
 
 @Entity(tableName = "jokes")
@@ -12,5 +11,6 @@ data class JokeEntity(
     @ColumnInfo(name = "joke", defaultValue = "") val joke: String,
     @ColumnInfo(name = "setup", defaultValue = "") val setup: String,
     @ColumnInfo(name = "delivery", defaultValue = "") val delivery: String,
-    @ColumnInfo(name = "date_added") val date: LocalDateTime
+    @ColumnInfo(name = "date_added") val date: LocalDateTime,
+    @ColumnInfo(name = "type") val type: String,
 )

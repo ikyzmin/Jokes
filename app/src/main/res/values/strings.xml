@@ -3,4 +3,5 @@
     <string name="new_joke_button">"Новая Хохма"</string>
     <string name="joke_placeholder">"Здесь будет хохма"</string>
     <string name="history_button_text">"Какие хохмы уже были"</string>
+    <string name="joke_label">Шутка №$1%s</string>
 </resources>

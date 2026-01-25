@@ -1,4 +1,4 @@
-package ru.ikyzmin.jokes
+package ru.ikyzmin.jokes.presentation
 
 object ComponentHolder {
     private var component: JokeComponent? = null
