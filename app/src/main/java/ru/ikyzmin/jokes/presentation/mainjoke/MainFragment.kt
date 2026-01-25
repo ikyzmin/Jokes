@@ -10,41 +10,39 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat.enableEdgeToEdge
 import androidx.core.view.WindowInsetsCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import ru.ikyzmin.jokes.R
 import ru.ikyzmin.jokes.domain.models.JokeType
 import ru.ikyzmin.jokes.presentation.ComponentHolder
-import ru.ikyzmin.jokes.presentation.history.HistoryActivity
+import ru.ikyzmin.jokes.presentation.history.HistoryFragment
 
-class MainActivity : AppCompatActivity() {
+class MainFragment : Fragment(R.layout.fragment_main) {
 
     private val component = ComponentHolder.getComponent()
     private val viewModel: MainViewModel by viewModels { component.mainViewModelFactory }
+    private val router = component.router
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContentView(R.layout.activity_main)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
-        val newJokeButton = findViewById<Button>(R.id.new_joke)
-        val historyButton = findViewById<Button>(R.id.history_button)
-        val jokeTextView = findViewById<TextView>(R.id.joke_text)
-        val jokeSetupTextView = findViewById<TextView>(R.id.setup_text)
-        val jokeDeliveryTextView = findViewById<TextView>(R.id.delivery_text)
-        val progressBar = findViewById<ProgressBar>(R.id.progress_bar)
-        val twolineJokeLayout = findViewById<View>(R.id.twoline_joke_layout)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val newJokeButton = view.findViewById<Button>(R.id.new_joke)
+        val historyButton = view.findViewById<Button>(R.id.history_button)
+        val jokeTextView = view.findViewById<TextView>(R.id.joke_text)
+        val jokeSetupTextView = view.findViewById<TextView>(R.id.setup_text)
+        val jokeDeliveryTextView = view.findViewById<TextView>(R.id.delivery_text)
+        val progressBar = view.findViewById<ProgressBar>(R.id.progress_bar)
+        val twolineJokeLayout = view.findViewById<View>(R.id.twoline_joke_layout)
 
         historyButton.setOnClickListener {
-            startActivity(Intent(this, HistoryActivity::class.java))
+            router.open(HistoryFragment())
         }
+
         newJokeButton.setOnClickListener {
             viewModel.loadJoke()
         }
-        viewModel.viewState.observe(this) { state ->
+        viewModel.viewState.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is MainState.Content -> {
                     when (state.joke.type) {

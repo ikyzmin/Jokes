@@ -23,6 +23,8 @@ import ru.ikyzmin.jokes.domain.usecases.GetJokesUseCaseImpl
 import ru.ikyzmin.jokes.domain.usecases.SaveJokeUseCaseImpl
 import ru.ikyzmin.jokes.presentation.history.HistoryViewModel
 import ru.ikyzmin.jokes.presentation.mainjoke.MainViewModel
+import ru.ikyzmin.jokes.presentation.navigation.NavigationHolderImpl
+import ru.ikyzmin.jokes.presentation.navigation.RouterImpl
 import java.time.LocalDateTime
 
 class JokeComponent(context: Context) {
@@ -68,4 +70,8 @@ class JokeComponent(context: Context) {
             return HistoryViewModel(getJokesHistoryUseCase) as T
         }
     }
+
+    val navigatorHolder = NavigationHolderImpl()
+
+    val router = RouterImpl(navigatorHolder)
 }

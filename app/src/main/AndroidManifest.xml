@@ -15,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Jokes">
         <activity
-            android:name=".presentation.mainjoke.MainActivity"
+            android:name=".presentation.navigation.RootActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,8 +23,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".presentation.history.HistoryActivity" />
         <activity android:name=".presentation.JokeDetailsActivity" />
     </application>
-
 </manifest>
