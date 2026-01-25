@@ -14,6 +14,7 @@ import androidx.core.view.WindowCompat.enableEdgeToEdge
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import ru.ikyzmin.jokes.R
 import ru.ikyzmin.jokes.domain.models.JokeType
 import ru.ikyzmin.jokes.presentation.ComponentHolder
@@ -36,7 +37,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         val twolineJokeLayout = view.findViewById<View>(R.id.twoline_joke_layout)
 
         historyButton.setOnClickListener {
-            router.open(HistoryFragment())
+            findNavController().navigate(R.id.action_mainFragment_to_historyFragment)
         }
 
         newJokeButton.setOnClickListener {
