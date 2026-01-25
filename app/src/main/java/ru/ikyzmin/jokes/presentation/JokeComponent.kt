@@ -1,6 +1,9 @@
 package ru.ikyzmin.jokes.presentation
 
 import android.content.Context
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.room.Room
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
@@ -18,6 +21,8 @@ import ru.ikyzmin.jokes.domain.usecases.GetJokeListUseCase
 import ru.ikyzmin.jokes.domain.usecases.GetJokesListUseCaseImpl
 import ru.ikyzmin.jokes.domain.usecases.GetJokesUseCaseImpl
 import ru.ikyzmin.jokes.domain.usecases.SaveJokeUseCaseImpl
+import ru.ikyzmin.jokes.presentation.history.HistoryViewModel
+import ru.ikyzmin.jokes.presentation.mainjoke.MainViewModel
 import java.time.LocalDateTime
 
 class JokeComponent(context: Context) {
@@ -51,4 +56,16 @@ class JokeComponent(context: Context) {
     val getJokesHistoryUseCase = GetJokesListUseCaseImpl(jokeLocalRepository)
 
     val saveJokeUseCase = SaveJokeUseCaseImpl(jokeLocalRepository)
+
+    val mainViewModelFactory = object : ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            return MainViewModel(getJokesUseCase, saveJokeUseCase) as T
+        }
+    }
+
+    val historyViewModelFactory = object : ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            return HistoryViewModel(getJokesHistoryUseCase) as T
+        }
+    }
 }

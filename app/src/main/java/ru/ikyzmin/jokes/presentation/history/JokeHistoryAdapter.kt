@@ -1,4 +1,4 @@
-package ru.ikyzmin.jokes.presentation
+package ru.ikyzmin.jokes.presentation.history
 
 import android.view.LayoutInflater
 import android.view.View

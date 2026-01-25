@@ -1,31 +1,25 @@
-package ru.ikyzmin.jokes.presentation
+package ru.ikyzmin.jokes.presentation.mainjoke
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.launch
-import ru.ikyzmin.jokes.domain.models.JokeType
 import ru.ikyzmin.jokes.R
-import ru.ikyzmin.jokes.data.db.JokeEntity
-import ru.ikyzmin.jokes.domain.models.Callback
-import ru.ikyzmin.jokes.domain.models.Joke
+import ru.ikyzmin.jokes.domain.models.JokeType
+import ru.ikyzmin.jokes.presentation.ComponentHolder
+import ru.ikyzmin.jokes.presentation.history.HistoryActivity
 
 class MainActivity : AppCompatActivity() {
 
     private val component = ComponentHolder.getComponent()
-    private val jokeUseCase = component.getJokesUseCase
-    private val saveJokeUseCase = component.saveJokeUseCase
-
-    private val coroutineScope = this.lifecycleScope
+    private val viewModel: MainViewModel by viewModels { component.mainViewModelFactory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,23 +42,23 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, HistoryActivity::class.java))
         }
         newJokeButton.setOnClickListener {
-            newJokeButton.isEnabled = false
-            progressBar.visibility = View.VISIBLE
-            jokeUseCase.getJokes(blacklist = "", callback = object : Callback {
-                override fun onSuccess(joke: Joke) {
-                    saveJoke(joke)
-                    when (joke.type) {
+            viewModel.loadJoke()
+        }
+        viewModel.viewState.observe(this) { state ->
+            when (state) {
+                is MainState.Content -> {
+                    when (state.joke.type) {
                         JokeType.single -> {
                             jokeTextView.visibility = View.VISIBLE
                             twolineJokeLayout.visibility = View.GONE
-                            jokeTextView.text = joke.joke.orEmpty()
+                            jokeTextView.text = state.joke.joke.orEmpty()
                         }
 
                         JokeType.twopart -> {
                             jokeTextView.visibility = View.GONE
                             twolineJokeLayout.visibility = View.VISIBLE
-                            jokeSetupTextView.text = joke.setup.orEmpty()
-                            jokeDeliveryTextView.text = joke.delivery.orEmpty()
+                            jokeSetupTextView.text = state.joke.setup.orEmpty()
+                            jokeDeliveryTextView.text = state.joke.delivery.orEmpty()
                         }
 
                         else -> {/* no-op */
@@ -74,18 +68,13 @@ class MainActivity : AppCompatActivity() {
                     newJokeButton.isEnabled = true
                 }
 
-
-                override fun onFailure(t: Throwable?) {
-                    Log.e("TEST", "ERROR GETTING HOHMA", t)
-                    progressBar.visibility = View.GONE
-                    newJokeButton.isEnabled = true
+                MainState.Error -> TODO()
+                MainState.Loading -> {
+                    newJokeButton.isEnabled = false
+                    progressBar.visibility = View.VISIBLE
                 }
+            }
 
-            })
         }
-    }
-
-    fun saveJoke(joke: Joke) {
-        saveJokeUseCase.saveJoke(joke)
     }
 }

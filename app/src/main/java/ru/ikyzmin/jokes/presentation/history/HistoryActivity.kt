@@ -1,23 +1,22 @@
-package ru.ikyzmin.jokes.presentation
+package ru.ikyzmin.jokes.presentation.history
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.coroutines.launch
 import ru.ikyzmin.jokes.R
-import ru.ikyzmin.jokes.domain.models.Joke
-import ru.ikyzmin.jokes.domain.models.ListCallback
+import ru.ikyzmin.jokes.presentation.ComponentHolder
+import ru.ikyzmin.jokes.presentation.JokeDetailsActivity
 
 class HistoryActivity : AppCompatActivity(R.layout.activity_hystory) {
     private val component = ComponentHolder.getComponent()
 
-    private val coroutineScope = this.lifecycleScope
-    private val getJokesUseCase = component.getJokesHistoryUseCase
+    private val historyViewModel: HistoryViewModel by viewModels { component.historyViewModelFactory }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,19 +28,15 @@ class HistoryActivity : AppCompatActivity(R.layout.activity_hystory) {
         }
         val recycler = findViewById<RecyclerView>(R.id.recycler)
         recycler.layoutManager = LinearLayoutManager(this)
-        coroutineScope.launch {
-            getJokesUseCase.getJokesList(object : ListCallback {
-                override fun onSuccess(jokes: List<Joke>) {
-                    recycler.adapter = JokeHistoryAdapter(jokes, onJokeClicked = {
-                        startActivity(Intent(this@HistoryActivity, JokeDetailsActivity::class.java))
+        historyViewModel.loadHistory()
+        historyViewModel.viewState.observe(this) { state ->
+            when (state) {
+                is HistoryState.Content -> {
+                    recycler.adapter = JokeHistoryAdapter(state.jokes, onJokeClicked = {
+                        startActivity(Intent(this, JokeDetailsActivity::class.java))
                     })
                 }
-
-                override fun onFailure(t: Throwable?) {
-                    TODO("Not yet implemented")
-                }
-
-            })
+            }
         }
     }
 }
