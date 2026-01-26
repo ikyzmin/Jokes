@@ -3,15 +3,15 @@ package ru.ikyzmin.jokes.presentation.history
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ru.ikyzmin.jokes.R
 import ru.ikyzmin.jokes.presentation.ComponentHolder
-import ru.ikyzmin.jokes.presentation.JokeDetailsActivity
+import ru.ikyzmin.jokes.presentation.JokeDetailsFragment
+import ru.ikyzmin.jokes.presentation.JokeDetailsFragmentArgs
 
 class HistoryFragment : Fragment(R.layout.fragment_hystory) {
     private val component = ComponentHolder.getComponent()
@@ -27,7 +27,11 @@ class HistoryFragment : Fragment(R.layout.fragment_hystory) {
             when (state) {
                 is HistoryState.Content -> {
                     recycler.adapter = JokeHistoryAdapter(state.jokes, onJokeClicked = {
-                        startActivity(Intent(requireContext(), JokeDetailsActivity::class.java))
+                        findNavController().navigate(
+                            HistoryFragmentDirections.actionHistoryFragmentToDetailsFragment(
+                                joke = it
+                            )
+                        )
                     })
                 }
             }

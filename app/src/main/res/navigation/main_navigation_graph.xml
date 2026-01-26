@@ -8,7 +8,7 @@
         android:id="@+id/mainFragment"
         android:name="ru.ikyzmin.jokes.presentation.mainjoke.MainFragment"
         android:label="fragment_main"
-        tools:layout="@layout/fragment_main" >
+        tools:layout="@layout/fragment_main">
         <action
             android:id="@+id/action_mainFragment_to_historyFragment"
             app:destination="@id/historyFragment" />
@@ -18,12 +18,24 @@
         android:id="@+id/historyFragment"
         android:name="ru.ikyzmin.jokes.presentation.history.HistoryFragment"
         android:label="fragment_hystory"
-        tools:layout="@layout/fragment_hystory" >
+        tools:layout="@layout/fragment_hystory">
         <action
             android:id="@+id/action_historyFragment_to_mainFragment2"
             app:destination="@id/mainFragment"
             app:enterAnim="@anim/nav_default_pop_enter_anim"
             app:exitAnim="@anim/nav_default_pop_exit_anim"
             app:popUpTo="@id/mainFragment" />
+        <action
+            android:id="@+id/action_historyFragment_to_detailsFragment"
+            app:destination="@id/detailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/detailsFragment"
+        android:name="ru.ikyzmin.jokes.presentation.JokeDetailsFragment"
+        android:label="fragment_details"
+        tools:layout="@layout/fragment_details">
+        <argument
+            android:name="joke"
+            app:argType="ru.ikyzmin.jokes.domain.models.Joke" />
     </fragment>
 </navigation>

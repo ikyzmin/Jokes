@@ -1,7 +1,10 @@
 plugins {
     alias(libs.plugins.android.application)
+    id("kotlin-parcelize")
     kotlin("plugin.serialization") version "2.3.0"
     id("com.google.devtools.ksp")
+    id("androidx.navigation.safeargs.kotlin")
+
 }
 
 android {
