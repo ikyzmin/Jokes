@@ -20,8 +20,6 @@ class JokeComponent(context: Context) {
 
     val jokesService: JokesService = retrofit.create(JokesService::class.java)
 
-    val jokesRepository = JokesRepository(jokesService)
-
     lateinit var context: Context
 
     val db = Room.databaseBuilder(
@@ -30,6 +28,4 @@ class JokeComponent(context: Context) {
     ).build()
 
     val jokeDao = db.jokeDao()
-
-    val jokeLocalRepository = JokeLocalRepository(jokeDao)
 }

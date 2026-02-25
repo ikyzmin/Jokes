@@ -11,7 +11,7 @@ import kotlin.concurrent.thread
 class HistoryActivity : AppCompatActivity(R.layout.activity_hystory) {
     private val component = ComponentHolder.getComponent()
 
-    private val jokeLocalRepository = component.jokeLocalRepository
+    private val jokesDao = component.jokeDao
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,7 +29,7 @@ class HistoryActivity : AppCompatActivity(R.layout.activity_hystory) {
     
     private fun loadJokesFromDatabase(recycler: RecyclerView) {
         thread {
-            val jokes = jokeLocalRepository.jokes()
+            val jokes = jokesDao.getJokes()
             runOnUiThread {
                 recycler.adapter = JokeHystoryAdapter(jokes)
             }

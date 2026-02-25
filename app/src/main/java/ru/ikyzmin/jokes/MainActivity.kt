@@ -20,7 +20,8 @@ import java.util.concurrent.Executors
 class MainActivity : AppCompatActivity() {
 
     private val component = ComponentHolder.getComponent()
-    private val jokesRepository: JokesRepository = component.jokesRepository
+    private val jokesService: JokesService = component.jokesService
+    private val jokesDao: JokesDao = component.jokeDao
     private val executor = Executors.newSingleThreadExecutor()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,9 +47,8 @@ class MainActivity : AppCompatActivity() {
         newJokeButton.setOnClickListener {
             newJokeButton.isEnabled = false
             progressBar.visibility = View.VISIBLE
-            jokesRepository.getJoke(
-                "",
-                callback = object : Callback<JokeResponse> {
+            jokesService.jokes("").enqueue(
+                object : Callback<JokeResponse> {
                     override fun onResponse(
                         call: Call<JokeResponse?>?,
                         response: Response<JokeResponse?>?
@@ -93,13 +93,13 @@ class MainActivity : AppCompatActivity() {
 
     fun saveJoke(joke: JokeResponse) {
         executor.execute {
-            component.jokeLocalRepository.insertJoke(joke.toJokeEntity())
+            jokesDao.addJoke(joke.toJokeEntity())
         }
     }
 
     fun getJokes() {
         executor.execute {
-            val jokes = component.jokeLocalRepository.jokes()
+            val jokes = jokesDao.getJokes()
             Log.d("JokesDb", "Jokes: $jokes")
         }
     }
