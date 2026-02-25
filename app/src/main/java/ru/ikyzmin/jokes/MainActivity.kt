@@ -11,22 +11,17 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.lifecycle.LifecycleCoroutineScope
-import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.time.LocalDate
 import java.time.LocalDateTime
+import java.util.concurrent.Executors
 
 class MainActivity : AppCompatActivity() {
 
     private val component = ComponentHolder.getComponent()
     private val jokesRepository: JokesRepository = component.jokesRepository
-
-    private val coroutineScope = this.lifecycleScope
+    private val executor = Executors.newSingleThreadExecutor()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,6 +71,8 @@ class MainActivity : AppCompatActivity() {
                                     jokeSetupTextView.text = joke.setup.orEmpty()
                                     jokeDeliveryTextView.text = joke.delivery.orEmpty()
                                 }
+
+                                else -> {}
                             }
                         }
                         progressBar.visibility = View.GONE
@@ -95,16 +92,21 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun saveJoke(joke: JokeResponse) {
-        coroutineScope.launch {
+        executor.execute {
             component.jokeLocalRepository.insertJoke(joke.toJokeEntity())
         }
     }
 
     fun getJokes() {
-        coroutineScope.launch {
+        executor.execute {
             val jokes = component.jokeLocalRepository.jokes()
             Log.d("JokesDb", "Jokes: $jokes")
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        executor.shutdown()
     }
 
     fun JokeResponse.toJokeEntity(): JokeEntity {

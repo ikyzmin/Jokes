@@ -8,8 +8,8 @@ import androidx.room.Query
 @Dao
 interface JokesDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun addJoke(joke: JokeEntity)
+    fun addJoke(joke: JokeEntity)
 
     @Query("SELECT * FROM jokes")
-    suspend fun getJokes(): List<JokeEntity>
+    fun getJokes(): List<JokeEntity>
 }
